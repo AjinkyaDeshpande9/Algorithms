@@ -6,80 +6,57 @@
     Space Complexity: O(logn)
 */
 
-#include <stdio.h>
-
-struct pair
+#include<stdio.h>
+int max, min;
+int a[100];
+void maxmin(int i, int j)
 {
-    int min;
-    int max;
-};
-int call_to_stack = 0;
-int comp = 0;
-struct pair getMinMax(int arr[], int low, int high)
-{
-    struct pair minmax, mml, mmr;
-    int mid;
-    call_to_stack++;
-
-    if (low == high)
-    {
-        comp++;
-        minmax.max = arr[low];
-        minmax.min = arr[low];
-        return minmax;
-    }
-
-    if (high == low + 1)
-    {
-
-        if (arr[low] > arr[high])
-        {
-            comp++;
-            minmax.max = arr[low];
-            minmax.min = arr[high];
-        }
-        else
-        {
-            comp++;
-            minmax.max = arr[high];
-            minmax.min = arr[low];
-        }
-        return minmax;
-    }
-
-    mid = (low + high) / 2;
-
-    mml = getMinMax(arr, low, mid);
-    mmr = getMinMax(arr, mid + 1, high);
-
-    if (mml.min < mmr.min)
-        minmax.min = mml.min;
-    else
-        minmax.min = mmr.min;
-    comp++;
-
-    if (mml.max > mmr.max)
-        minmax.max = mml.max;
-    else
-        minmax.max = mmr.max;
-    comp++;
-    return minmax;
+ int max1, min1, mid;
+ if(i==j)
+ {
+  max = min = a[i];
+ }
+ else
+ {
+  if(i == j-1)
+  {
+   if(a[i] <a[j])
+   {
+    max = a[j];
+    min = a[i];
+   }
+   else
+   {
+    max = a[i];
+    min = a[j];
+   }
+  }
+  else
+  {
+   mid = (i+j)/2;
+   maxmin(i, mid);
+   max1 = max; min1 = min;
+   maxmin(mid+1, j);
+   if(max <max1)
+    max = max1;
+   if(min > min1)
+    min = min1;
+  }
+ }
 }
-
-int main()
+int main ()
 {
-    int arr[5];
-    int arr_size = 5;
-    printf("****MINIMUM & MAXIMUM****\n");
-    printf("Enter 5 numbers:\n");
-    for (int i = 0; i < 5; i++)
-    {
-        scanf("%d", &arr[i]);
-    }
-    struct pair minmax = getMinMax(arr, 0, arr_size - 1);
-    printf("\nMinimum element --: %d", minmax.min);
-    printf("\nMaximum element --: %d", minmax.max);
-    printf("\n--------------------------------");
-    printf("\nCalls--: %d", call_to_stack);
-    printf("\nNo. Of Comparisons--: %d\n", comp);
+ int i, num;
+ printf ("\nEnter the total number of numbers : ");
+ scanf ("%d",&num);
+ printf ("Enter the numbers : \n");
+ for (i=1;i<=num;i++)
+  scanf ("%d",&a[i]);
+
+ max = a[0];
+ min = a[0];
+ maxmin(1, num);
+ printf ("Minimum element in an array : %d\n", min);
+ printf ("Maximum element in an array : %d\n", max);
+ return 0;
 }
