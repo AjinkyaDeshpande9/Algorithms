@@ -6,82 +6,65 @@
     Space Complexity: O(mn)
 */
 
-#include <stdio.h>
-#include <string.h>
-
-int max(int a, int b);
-void printLCS(int i, int j)
+#include<stdio.h>
+#include<string.h>
+ 
+int i,j,m,n,c[20][20];
+char x[20],y[20],b[20][20];
+ 
+void print(int i,int j)
 {
-    char X[10], Y[10], L[10][10];
-    if (i == 0 || j == 0)
-        return;
-
-    if (X[i] == Y[j])
-    {
-        printLCS(i - 1, j - 1);
-        printf("%c", X[i]);
-    }
-    else if (L[i][j - 1] >= L[i - 1][j])
-        printLCS(i, j - 1);
-    else
-        printLCS(i - 1, j);
+                if(i==0 || j==0)
+                                return;
+                if(b[i][j]=='c')
+                {
+                                print(i-1,j-1);
+                                printf("%c",x[i-1]);
+                }
+                else if(b[i][j]=='u')
+                                print(i-1,j);
+                else
+                                print(i,j-1);
 }
-int lcs(char *X, char *Y, int m, int n)
+ 
+void lcs()
 {
-    int L[m + 1][n + 1];
-    int i, j;
-    // char arrow;
-
-    for (i = 0; i <= m; i++)
-    {
-        for (j = 0; j <= n; j++)
-        {
-            if (i == 0 || j == 0)
-            {
-                L[i][j] = 0;
-                // arrow="UP";
-            }
-
-            else if (X[i - 1] == Y[j - 1])
-            {
-                L[i][j] = L[i - 1][j - 1] + 1;
-                // arrow="D";
-            }
-
-            else
-            {
-                L[i][j] = max(L[i - 1][j], L[i][j - 1]);
-                // arrow="B";
-            }
-            // puts(arrow);
-            printf("%d \t", L[i][j]);
-        }
-
-        printf("\n");
-    }
-    printf("\nLongest Common Sub-Sequence is: \n");
-    printLCS(m, n);
-    return L[m][n];
+                m=strlen(x);
+                n=strlen(y);
+                for(i=0;i<=m;i++)
+                                c[i][0]=0;
+                for(i=0;i<=n;i++)
+                                c[0][i]=0;
+                                
+                //c, u and l denotes cross, upward and downward directions respectively
+                for(i=1;i<=m;i++)
+                                for(j=1;j<=n;j++)
+                                {
+                                                if(x[i-1]==y[j-1])
+                                                {
+                                                                c[i][j]=c[i-1][j-1]+1;
+                                                                b[i][j]='c';
+                                                }
+                                                else if(c[i-1][j]>=c[i][j-1])
+                                                {
+                                                                c[i][j]=c[i-1][j];
+                                                                b[i][j]='u';
+                                                }
+                                                else
+                                                {
+                                                                c[i][j]=c[i][j-1];
+                                                                b[i][j]='l';
+                                                }
+                                }
 }
-
-int max(int a, int b)
-{
-    return (a > b) ? a : b;
-}
-
 int main()
 {
-    char X[10], Y[10];
-    printf("Enter first string: \n");
-    gets(X);
-    printf("Enter second string: \n");
-    gets(Y);
-
-    int m = strlen(X);
-    int n = strlen(Y);
-
-    printf("Length of LCS is %d", lcs(X, Y, m, n));
-
-    // printf("\nLongest Common Sub-Sequence is: bcba \n");
-    return 0;
+                printf("Enter 1st sequence:");
+                scanf("%s",x);
+                printf("Enter 2nd sequence:");
+                scanf("%s",y);
+                printf("\nThe Longest Common Subsequence is ");
+                lcs();
+                print(m,n);
+return 0;
 }
